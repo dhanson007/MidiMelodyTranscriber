@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Binauralize Your Beats</title>
+
+        <meta charset="utf-8">
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <style type="text/css">
+			@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap');
+          .container {
+            max-width: 500px;
+            padding-top: 50px;
+          }
+		  body {
+			background-image:url("gradient1.png");
+			background-repeat: repeat-y;
+			background-size: cover;
+				}
+				
+				</style>
+    </head>
+
+    <body>
+                  <nav class="navbar navbar-inverse" role="navigation">
+                    <div class="container-fluid">
+                      <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">Binauralize Your Beats</a>
+                      </div>
+                  
+                      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                          <li><a href="/edu">Learn More</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                          <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown">Upload <b class="caret"></b></a>
+                            <ul id="dropdown" class="dropdown-menu">
+                              <li><a value="sleep" id="sleep1" onClick="sessionStorage.setItem('goal','sleep')" href="/audio_upload">Sleep</a></li>
+                              <li><a value="med" id="med1" onClick="sessionStorage.setItem('goal','med')" href="/audio_upload">Meditation</a></li>
+                              <li><a value="stress" id="stress1" onClick="sessionStorage.setitem('goal','stress')" href="/audio_upload">Stress</a></li>
+                              <li><a value="focus" id="focus1" onClick="sessionStorage.setItem('goal','focus')" href="/audio_upload">Focus</a></li>
+                              <li><a value="mem" id="mem1" onClick="sessionStorage.setItem('goal','mem')" href="/audio_upload">Memory</a></li>
+                            <ul class="dropdown-menu">
+                              <li><a href="/audio_upload">Sleep</a></li>
+                              <li><a href="/audio_upload">Meditation</a></li>
+                              <li><a href="/audio_upload">Stress</a></li>
+                              <li><a href="/audio_upload">Focus</a></li>
+                              <li><a href="/audio_upload">Memory</a></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div><!-- /.navbar-collapse -->
+                    </div><!-- /.container-fluid -->
+                  </nav>
+          <div class="container">
+            <p style="text-align:center">
+              <h1 style="font-family:'Raleway'">YouTube to Midi Transcriber</h1>
+              <br>
+              <h4>What part would you like?</h4>
+            </p>
+        </div>
+        <br>
+        <div>
+		
+	
+	<br>
+	<a href='/edu'>
+		<button class="learn">
+			<h2>Click to Learn More</h2>
+			</button>
+	</a>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+    
+    </body>
+
+</html>
