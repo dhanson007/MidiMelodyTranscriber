@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>YouTube Transcriber</title>
+    <link rel="icon" href="/static/images/AM Favicon.png">
+    <!-- Bootstrap CSS file -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="/static/custom.css">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> 
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"> -->
+  </head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+      <!-- <a href="/">
+    <img alt="" height="30" src="/static/images/youtube_icon.png">
+      </a> -->
+    <a href="#" class="navbar-brand"> MIDI Melody Transcriber</a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse"> 
+       
+        <div class="navbar-nav">
+            <!--<a href="/" class="nav-item nav-link active">View Melody</a>
+            <a href="/harmedit" class="nav-item nav-link active">Edit Harmony</a> -->
+  
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Sample Menu</a>
+                <div class="dropdown-menu">
+                    <a href="javascript:get_song('The_Lemon_Song')" class="dropdown-item">The Lemon Song</a>
+                    <a href="javascript:get_song('Black_Water')" class="dropdown-item">Black Water</a>
+                    <a href="javascript:get_song('Use_Me')" class="dropdown-item">Use Me</a>
+                    <a href="javascript:get_song('Who_Are_You')" class="dropdown-item">Who Are You?</a>
+                    <a href="javascript:get_song('Doin_Time')" class="dropdown-item">Doin' Time</a>
+                    <a href="javascript:get_song('Higher_Ground')" class="dropdown-item">Higher Ground</a>
+                   <!-- <a href="/progressions_by_name" class="dropdown-item">View Harmonic Progressions by Name</a>
+                    <a href="/progressions_pivot" class="dropdown-item">Harmonic Progressions Pivot Table</a>
+                    <a href="/song_stats_pivot" class="dropdown-item">Song Level Statistics Pivot Table</a>
+                    <a href="/roman_numerals_pivot" class="dropdown-item">Roman Numerals Pivot Table</a>
+                    <a href="/chords" class="dropdown-item">View Harmony Statistics</a>
+                    <a href="/upload_status" class="dropdown-item">Update song data</a>
+                    <a href="/upload_status" class="dropdown-item">Check Upload Status</a>
+                    <a href="/batch_upload" class="dropdown-item">Batch Upload</a>-->
+                </div>
+            </div> 
+        </div>
+            <div > 
+                <audio controls>
+                    <source src = "The_Lemon_Song.wav" type="audio/wav">
+                </audio>
+
+            </div>
+        <!-- <form class="form-inline" action='/upload' method='POST'>
+            <div class="input-group">                    
+                <input type="text" id="search-text-input" data-toggle='tooltip' title='Search Youtube for a Song to Upload' name="search-text-input" class="form-control" placeholder="Search Youtube">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary" data-toggle='tooltip' title='Search Youtube for a Song to Upload'><i class="fa fa-search"></i></button>
+                </div>
+            </div> -->
+        </form>
+
+    </div>
+</nav>
+    <!-- JS files: jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{% block body %}{% endblock %}
+</body>
+</html>

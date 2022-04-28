@@ -1,0 +1,380 @@
+<!--{% extends "header.html" %}-->
+<!--{% block body %}<!doctype html-->
+
+<!--<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>-->
+<script src="https://g200kg.github.io/webaudio-controls/webaudio-controls.js" ></script><script src="js/webaudio-pianoroll.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.5.43/Tone.js"></script>
+<script type=text/javascript>
+  //$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  $SCRIPT_ROOT = "127.0.0.1:8100"
+</script>
+<script>
+      // 2. This code loads the IFrame Player API code asynchronously.
+  var tag = document.createElement('script');
+
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+var song_id = "";
+
+// 3. This function creates an <iframe> (and YouTube player)
+//    after the API code downloads.
+// var player;
+// function onYouTubeIframeAPIReady() {
+//   player = new YT.Player('player', {
+//     height: '148',
+//     width: '248',
+//     videoId: 'RsP3rFJJk1Y',
+//     events: {
+//       'onReady': onPlayerReady,
+//       'onStateChange': onPlayerStateChange
+//     }
+//   });
+// }
+
+// 4. The API will call this function when the video player is ready.
+function onPlayerReady(event) {
+  //event.target.playVideo();
+  console.log('player ready',$("#song_autocomplete"))
+  if ($('#song_autocomplete').attr('item_value'))  {
+        console.log('queueing')
+        player.cueVideoById($('#song_autocomplete').attr('item_value'))
+        get_new_song()
+      }
+  else if (document.getElementById('selected_id').value) {
+          player.cueVideoById(document.getElementById('selected_id').value)
+          //get_new_song()
+      }
+}
+
+// 5. The API calls this function when the player's state changes.
+//    The function indicates that when playing a video (state=1),
+//    the player should play for six seconds and then stop.
+var done = false;
+function onPlayerStateChange(event) {
+  console.log("state change",player.getPlayerState())
+  if (event.data == YT.PlayerState.PLAYING ) {
+      if (!done){
+        setInterval(gettime,100)
+        done = true;
+      }
+      handleplay();
+    
+  } else if (event.data == YT.PlayerState.CUED){
+    //player.seekTo(0)
+    //player.pauseVideo();
+  } else if (event.data == YT.PlayerState.BUFFERING){
+    handlepause();
+  } else if (event.data == YT.PlayerState.PAUSED){
+    handlepause();
+  }
+}
+function stopVideo() {
+  player.stopVideo();
+}
+function handlepause(){
+    /*if (player.getPlayerState() != YT.PlayerState.PAUSED && player.getPlayerState() != YT.PlayerState.BUFFERING){
+      player.pauseVideo();
+    } */ 
+}
+function handleplay(){
+    
+      Tone.Transport.cancel(0)
+      //actx.resume();
+      //document.getElementById("proll").play(actx,Callback);
+      var notedata = document.getElementById("proll").get_notedata()
+      document.getElementById("proll").play(actx,Callback)
+      var notearr = notedata[0]
+      var loop_start = parseInt(notedata[1]) / timebase * 4 / Tone.Transport.bpm.value * 60
+      var loop_end = parseInt(notedata[2]) / timebase * 4 / Tone.Transport.bpm.value * 60
+      var start_point = parseInt(notedata[3]) / timebase * 4 / Tone.Transport.bpm.value * 60
+      console.log("n",Tone.Transport.bpm.value,notedata[2],loop_end,loop_start)
+
+
+        var pianoPart = new Tone.Part(function(time,value){
+            piano.triggerAttackRelease(value.note,value.dur,time)
+        },notearr)
+        pianoPart.loopStart=loop_start
+        pianoPart.loopEnd=loop_end
+        pianoPart.loop=true
+
+      if (Tone.context.rawContext.stat == 'suspended'){
+        Tone.context.resume()
+        actx.resume()
+      }
+      console.log("start",start_point, pianoPart.toSeconds())
+      Tone.Transport.start()
+      pianoPart.start(0,start_point)
+      /*Tone.Transport.scheduleRepeat((time) => {
+        console.log("playing",time)
+        pianoPart.start(0,1)
+      }, 8);*/
+    
+    
+
+  }
+function gettime(){
+    var st = player.getPlayerState();
+
+    if (player.getPlayerState() == 1) {
+      var currtime = player.getCurrentTime();
+      document.getElementById("playertime".innerHTML = currtime.toFixed(2))
+      
+    }
+    else {
+      //document.getElementById("playertime").value = 0
+    }
+    
+  }
+</script>
+<script>
+timebase=16;
+actx=new AudioContext();
+osc=actx.createOscillator();
+gain=actx.createGain();
+gain.gain.value=0;
+osc.type="sawtooth";
+osc.start();
+osc.connect(gain).connect(actx.destination);
+current_song_time=0;
+player_start_time=0;
+var piano = new Tone.PolySynth(Tone.Synth, {
+        "volume" : -8,
+        "activeVoices" : 4,
+        "oscillator" : {
+            "partials" : [1, 2, 1],
+        },
+        "portamento" : 0.05
+    }).toDestination();
+
+function Callback(ev){
+    var ct = actx.currentTime
+    console.log("EV",ev)
+    /*osc.detune.setValueAtTime((ev.n-69)*100,ev.t);
+    gain.gain.setTargetAtTime(0.5,ev.t,0.005);
+    gain.gain.setTargetAtTime(0,ev.g,0.1);*/
+    current_song_time = ev.st.toFixed(1)
+    console.log("st",current_song_time)
+    if (player.getPlayerState() == 1) {
+      var pt = player.getCurrentTime().toFixed(1)
+      console.log(player,player.getCurrentTime()) 
+      if (pt != current_song_time){
+        console.log("oos",pt,current_song_time)
+        player.seekTo(current_song_time)
+      }
+    }
+}
+function Play(){
+    actx.resume();
+    document.getElementById("proll").play(actx,Callback);
+    handleplay();
+    /*if (player.getPlayerState() != YT.PlayerState.PLAYING){
+        console.log("play",current_song_time)
+        player.seekTo(current_song_time)
+        player.playVideo();
+      }
+    if ($("input[name='video_or_midi']:checked").val() == 'video' || $("input[name='video_or_midi']:checked").val() == 'both'){
+      if (player.getPlayerState() != YT.PlayerState.PLAYING){
+        player.seekTo(current_song_time)
+        //player_start_time=actx.currentTime
+        player.playVideo();
+      } 
+    }*/
+}
+function Stop(){
+  document.getElementById('proll').stop();
+  osc.detune.cancelScheduledValues(0)
+  gain.gain.cancelScheduledValues(0)
+  gain.gain.value = 0
+  Tone.Transport.cancel(0)
+  //handlepause();
+  player.stopVideo()
+}
+function Layout(k){
+    switch(k.id){
+    case "xrange":
+        document.getElementById("proll").xrange=k.value*timebase;
+        break;
+    case "xoffset":
+        document.getElementById("proll").xoffset=k.value*timebase;
+        break;
+    case "yrange":
+        document.getElementById("proll").yrange=k.value;
+        break;
+    case "yoffset":
+        document.getElementById("proll").yoffset=k.value;
+        break;
+    }
+}
+function pre_process(songwav){
+
+
+
+}
+
+function get_song(songname){
+    // song_id = document.getElementById('selected_id').value
+    // var song_id, title;
+    // if (song_id == 'undefined'){
+    //     song_id = 'JGb5IweiYG8';
+    //     title = 'Fever - Peggy Lee-JGb5IweiYG8'
+    // }
+    document.getElementById('selected_id').value = songname
+
+    chord_type = 'madmom'
+    user_id = 'system'
+    midi_id = ''
+    console.log("sid",songname)
+    if ($("input[name='video_or_midi']:checked").val() == 'midi') {
+      type = 'bass'
+    }
+    if ($("input[name='video_or_midi']:checked").val() == 'video') {
+      type = 'vocals'
+    }
+    if ($("input[name='video_or_midi']:checked").val() == 'both') {
+      type = 'other'
+    }
+
+    $.getJSON('/save_audio', {title : songname, type : type},
+    function(data) {  
+      griddata = data[1]
+      songfile = document.getElementById('songfile')
+      console.log("data",data)
+      beatdata = data.data1
+      //chorddata = data.data2
+      //secdata = data.data3
+      //lyricdata = data.lyrics;
+      tempo = parseInt(data.bpm)
+      console.log("tempo", tempo)
+      
+      
+      var newarr = []
+      console.log("beatdata", Object.values(beatdata))
+      for (i in Object.values(beatdata)){
+        notearr = []
+        for ( var j = 0 ; j < Object.values(beatdata)[i].notearray.length ; j++){
+            notearr.push(Object.values(beatdata)[i].notearray[j])
+           }
+        newarr.push(notearr)
+      }
+      console.log("newarr: ", newarr)
+      var notearr = []
+      var sixteenths_per_sec = tempo / 60 * 4
+      for (i = 0 ;i < newarr.length;i++){
+        var duration = newarr[i][2].replace("n","")
+        duration = parseInt(duration) / sixteenths_per_sec
+        notearr.push([{time:newarr[i][0],note:newarr[i][1],dur:duration}])
+      }
+      Tone.Transport.cancel(0)
+
+        var pianoPart = new Tone.Part(function(time,value){
+            piano.triggerAttackRelease(value.note,value.dur,time)
+        },notearr).start()
+    //pianoPart.set({value:pianoRoll.noteData})
+        Tone.Transport.bpm.value = tempo
+        Tone.start()
+        console.log('tbpm',Tone.Transport.bpm.value)
+      console.log("new",newarr)
+      document.getElementById('proll').setMMLString(newarr,tempo)
+      console.log(document.getElementById('proll').get_notedata())
+    })
+}
+function save_data(){
+    chord_type = 'madmom'
+    song_id = document.getElementById('selected_id').value
+    var melody_data = document.getElementById('proll').getMMLString();
+    console.log("melody_data:", melody_data)
+    
+    $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/save_melody',
+                dataType : 'json',
+                data : JSON.stringify({song_id:song_id, melody_data: melody_data}),
+                success : function(result) {
+                  document.getElementById('messages').innerHTML=result.responseText;
+                  console.log(result); 
+                },error : function(result){
+                  console.log(result);
+                  document.getElementById('messages').innerHTML=result.responseText;
+                }
+            });
+}
+window.onload = function(){
+    if (document.getElementById('selected_id').value){
+ //       get_song();
+    }
+    console.log("ytid",document.getElementById("selected_id").value)
+    document.getElementById("proll").xrange= 16 * timebase;
+    document.getElementById("proll").yoffset= 48;
+    document.getElementById("proll").style.width = window.innerWidth 
+    console.log("width",window.innerWidth)
+}
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<input type="hidden" id='selected_id' value="{{ytid}}"></input>
+<input type="hidden" id='selected_title' value="{{title}}"></input>
+
+
+    <div class='row'>
+        <div class='col'>
+            <div id="base">
+                <div class = 'row'>
+                    <div class='col'>
+                        <label id='messages'></label>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col'>
+                        <webaudio-pianoroll id="proll" width="1500" height="500"></webaudio-pianoroll>
+                    </div>
+                </div>
+                
+                <div class='row'>
+                    <div class='col'>
+                        <webaudio-slider oninput="Layout(this)" id="xrange" direction="horz" min="1" max="32" value="16"># of Measures</webaudio-slider>
+                    </div>
+                    <div class='col'>
+                        <webaudio-slider oninput="Layout(this)" id="xoffset" direction="horz"  min="0" max="200" step="0.01" value="0">Scroll Horizontal</webaudio-slider>
+                    </div>
+                    <div class='col'>
+                        <webaudio-slider oninput="Layout(this)" id="yrange" min="3" max="32" value="16">Range</webaudio-slider>
+                    </div>
+                    <div class='col'>
+                        <webaudio-slider oninput="Layout(this)" id="yoffset" min="30" max="120"  value="48">Scroll Vertical</webaudio-slider>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+          </div>  
+    </div>
+    <br>
+    <div class='row'>
+        <div class='col'>
+            <button onclick="Play()">Play</button>
+            <button onclick="Stop()">Stop</button>
+            <button onclick="save_data()">Download MIDI</button>
+            <!--<button onclick="document.getElementById('proll').setMMLString(document.getElementById('mml').value)">setMMLString</button> -->
+            <!-- <button onclick='get_song()'>Get Song</button> -->
+        </div>
+    </div>
+    <div class='row'>
+        <!-- <textarea id="mml" rows="1" cols="80"></textarea> -->
+    </div>
+    <div class='row'>
+      <div class="col">
+        <input id='video_or_midi' type='radio' name='video_or_midi' value='video'><label>&nbspVocals Only&nbsp</label>
+        <input id='video_or_midi' type='radio' name='video_or_midi' value='midi'><label>&nbspBass Only&nbsp</label>
+        <input id='video_or_midi' type='radio' name='video_or_midi' value='both' checked><label>&nbspGuitar and Keyboard&nbsp</label>
+      </div>
+      <!-- <label id="filechooser">click here to choose your own file<input id="mid" type="file" style="display:none" /></label> -->
+      <input type="file"
+       id="songwav" name="songwav"
+       accept="audio/*">
+
+    </div>
+    <audio id='songfile'> </audio>
+  </div>
+
+{% endblock %}

@@ -1,84 +1,206 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Binauralize Your Beats</title>
 
-        <meta charset="utf-8">
-        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <style type="text/css">
-			@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap');
-          .container {
-            max-width: 500px;
-            padding-top: 50px;
-          }
-		  body {
-			background-image:url("gradient1.png");
+<head>
+  <title>YouTube Transcriber</title>
+  <meta charset="utf-8">
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <style type="text/css">
+    .container {
+      max-width: 500px;
+      padding-top: 100px;
+    }
+	body {
+			background-image:url("button3.png");
 			background-repeat: repeat-y;
 			background-size: cover;
 				}
-				
-				</style>
-    </head>
+ /* .loader {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+ .loader div {
+    display: none;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: #fff;
+    animation: loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+ .loader div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+  }
+.loader div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+  }
+.loader div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+  }
+@keyframes loader {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%, 100% {
+    top: 24px;
+    height: 32px;
+  }
+} */
 
-    <body>
-                  <nav class="navbar navbar-inverse" role="navigation">
-                    <div class="container-fluid">
-                      <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                          <span class="sr-only">Toggle navigation</span>
-                          <span class="icon-bar"></span>
-                          <span class="icon-bar"></span>
-                          <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="/">Binauralize Your Beats</a>
-                      </div>
-                  
-                      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                          <li><a href="/edu">Learn More</a></li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                          <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown">Upload <b class="caret"></b></a>
-                            <ul id="dropdown" class="dropdown-menu">
-                              <li><a value="sleep" id="sleep1" onClick="sessionStorage.setItem('goal','sleep')" href="/audio_upload">Sleep</a></li>
-                              <li><a value="med" id="med1" onClick="sessionStorage.setItem('goal','med')" href="/audio_upload">Meditation</a></li>
-                              <li><a value="stress" id="stress1" onClick="sessionStorage.setitem('goal','stress')" href="/audio_upload">Stress</a></li>
-                              <li><a value="focus" id="focus1" onClick="sessionStorage.setItem('goal','focus')" href="/audio_upload">Focus</a></li>
-                              <li><a value="mem" id="mem1" onClick="sessionStorage.setItem('goal','mem')" href="/audio_upload">Memory</a></li>
-                            <ul class="dropdown-menu">
-                              <li><a href="/audio_upload">Sleep</a></li>
-                              <li><a href="/audio_upload">Meditation</a></li>
-                              <li><a href="/audio_upload">Stress</a></li>
-                              <li><a href="/audio_upload">Focus</a></li>
-                              <li><a href="/audio_upload">Memory</a></li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </div><!-- /.navbar-collapse -->
-                    </div><!-- /.container-fluid -->
-                  </nav>
-          <div class="container">
-            <p style="text-align:center">
-              <h1 style="font-family:'Raleway'">YouTube to Midi Transcriber</h1>
-              <br>
-              <h4>What part would you like?</h4>
-            </p>
+  </style>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="js/background.js"></script>
+  <script src="functions.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a href="/">
+  <!--<img alt="" height="30" src="/static/images/Alternative Measures Logo_ WithTag_Large.png">
+    </a>-->
+  <!--<a href="#" class="navbar-brand">Alternative Measures</a>-->
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
+      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse"> 
+     
+      <div class="navbar-nav">
+          <!--<a href="/" class="nav-item nav-link active">View Melody</a>
+          <a href="/harmedit" class="nav-item nav-link active">Edit Harmony</a> -->
+
+          <div class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Menu</a>
+              <div class="dropdown-menu">
+                  <a href="/help" class="dropdown-item">Help</a>
+                  <a href="/melody" class="dropdown-item">View Instrumental Melody</a>
+                  <a href="/melody_selector" class="dropdown-item">Select Midi Melody Track</a>
+                  <a href="/harmedit" class="dropdown-item">Edit Harmony</a>
+                  <a href="/progressions" class="dropdown-item">Edit Bassline</a>
+                  <a href="/progressions_search" class="dropdown-item">Edit Vocal Melody</a>
+                 <!-- <a href="/progressions_by_name" class="dropdown-item">View Harmonic Progressions by Name</a>
+                  <a href="/progressions_pivot" class="dropdown-item">Harmonic Progressions Pivot Table</a>
+                  <a href="/song_stats_pivot" class="dropdown-item">Song Level Statistics Pivot Table</a>
+                  <a href="/roman_numerals_pivot" class="dropdown-item">Roman Numerals Pivot Table</a>
+                  <a href="/chords" class="dropdown-item">View Harmony Statistics</a>
+                  <a href="/upload_status" class="dropdown-item">Update song data</a>
+                  <a href="/upload_status" class="dropdown-item">Check Upload Status</a>
+                  <a href="/batch_upload" class="dropdown-item">Batch Upload</a>-->
+              </div>
+          </div> 
+      </div>
+      <label for="part">Select your desired part:</label>
+      <select id="part">  
+        <option value="bass">Bass</option>
+        <option value="vocals">Vocals</option>
+        <option value="guitar">Guitar</option>
+        <option value="piano">Piano</option>
+      </select>
+    </div>
+          <!-- external libs from cdnjs -->
+        <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script type="text/javascript"
+          src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+        <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+        <script type=text/javascript>
+                    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+                </script>
+        <script type="text/javascript">
+          $(function () {
+
+            var parseAndSave = function (f) {
+              $("#output").html("<p align='center' style='color:black;'>(processing...)</p>")
+              // loader.showLoading();
+              console.log("got file ", f)
+              var xhr = new XMLHttpRequest();
+              xhr.addEventListener('load', handle_response)
+              xhr.open('POST', '/save_audio', true);
+              req = new FormData()
+              req.set('audio', f,)
+              for (key of req.keys()) {
+                console.log("val", key)
+              }
+              xhr.send(req);
+            };
+
+            $("#mid").bind("change", function (event) {
+              showExample(event.target.files[0])
+              parseAndSave(event.target.files[0]);
+            });
+
+            $("#textarea").bind("input change", function () {
+              showExample(event.target.files[0])
+              parseAndSave($("#textarea").val());
+              
+            });
+
+            var dragging = function (evt) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              evt.originalEvent.dataTransfer.dropEffect = 'copy';
+              $("body").removeClass("whiteborder").addClass("greyborder");
+            };
+
+            var endDrag = function (evt) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              evt.originalEvent.dataTransfer.dropEffect = 'copy';
+              $("body").removeClass("greyborder").addClass("whiteborder");
+            };
+
+            var dropped = function (evt) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              $("body").removeClass("greyborder").addClass("whiteborder");
+              parseAndSave(evt.originalEvent.dataTransfer.files[0]);
+            };
+
+            $("html")
+              .on("dragover", dragging)
+              .on("dragend", endDrag)
+              .on("dragexit", endDrag)
+              .on("dragleave", endDrag)
+              .on("drop", dropped);
+          });
+          function handle_response(e) {
+            console.log(this.responseText);
+            document.getElementById("output").innerHTML = this.responseText;
+            loader.hideLoading();
+          }
+        </script>
+        <!-- <script>
+          function showLoading() {
+            document.getElementById("loader").style = "visibility: visible";
+          }
+          function hideLoading() {
+            document.getElementById("loader").style = "visibility: hidden";
+          }
+        </script> -->
+        <div class="container">
+          <div class="col-lg-9"></div>
+          <h1 style="text-align:center">YouTube Transcriber</h1>
+        <div class="loader">
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
+          <p style="text-align:center" style="line-height: 1.5">
+            Paste a YouTube Link or
+            <label id="filechooser">click here to choose your own file<input id="mid" type="file" style="display:none" /></label>
+            <br /><br />
+            <textarea placeholder="paste url here" style="width: 500px;" id="textarea"></textarea>
+            <br />
+          </p>
+                
         <br>
-        <div>
-		
-	
-	<br>
-	<a href='/edu'>
-		<button class="learn">
-			<h2>Click to Learn More</h2>
-			</button>
-	</a>
-        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<br>
 
-    
-    </body>
-
-</html>
+          </audio>
+        </div>
